@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Website</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/atom-one-dark.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="title"><b>Fetching Data from a Rapid API in Swift</b></h1>
+        <div class="image-container">
+            <div class="context">
+                <p>
+                    <b>
+                        Rapid is the world's largest API Hub. More than 4 million Front-end and Mobile 
+                        developers have made Rapid their hub of choice where they find, test, 
+                        and connect to tens of thousands of APIs, all with a single account.
+                        <br><br>
+                        The current code snippet in Rapid Api is still too outdated and on selecting 
+                        Swift as the desirable language, a beginner developer will struggle to understand 
+                        or implement it as:
+                        <ul>
+                            <li>Implementation is shown in NSUrl rather than URLSession.</li>
+                            <li>The endpoint provided is in the form of CURL rather than
+                                 a simple URL which we have to hit using PostMan.</li> 
+                        </ul>  
+                        With the below code one can easily fetch data from any Rapid API and later 
+                        decode it using JSONDecoder into the required Model.
+                    </b>
+                </p>
+                <pre>
+                    <code>
+                        func getData(link:String, completion: @escaping (Data)-&gt;Void){
+                            let semaphore = DispatchSemaphore (value: 0)
+                            
+                            var request = URLRequest(url: URL(string: &quot;\(link)&quot;)!,timeoutInterval: Double.infinity)
+                            request.addValue(&quot;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;, forHTTPHeaderField: &quot;x-rapidapi-key&quot;)
+                            request.addValue(&quot;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX&quot;, forHTTPHeaderField: &quot;x-rapidapi-host&quot;)
+                            
+                            request.httpMethod = &quot;GET&quot;
+                            
+                            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                                guard let data = data else {
+                                    print(String(describing: error))
+                                    semaphore.signal()
+                                    return
+                                }
+                                completion(data)
+                                semaphore.signal()
+                            }
+                            task.resume()
+                            semaphore.wait()
+                        }
+                    </code>
+                </pre>
+            </div>
+        </div>
+        <div class="about-writer">
+            <h1><b>About Me:<b></b></h1>
+            <p><ul>
+                <li><b>Hi!! I am Shashwat. A passionate iOS Developer.</b></li>
+                <li><b>Connect with me at: <i><a href="url">https://github.com/pandashashwat97</a></i></b></li>
+            </ul> </p>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</body>
+</html>
